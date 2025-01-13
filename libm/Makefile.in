@@ -1,0 +1,25 @@
+ALL_TARGET+=$(OBJDIR)/libopenlibm.a
+CLEAN_TARGET+=clean_libopenlibm
+
+OPENLIBMDIR= $(SRCROOT)/contrib/openlibm
+OPENLIBM_ARCH=$(ARCH)
+
+@COMPILE_LIBEC@
+
+CFLAGS+=-I$(SRCDIR)
+CFLAGS+=-Wno-maybe-uninitialized -Wno-uninitialized
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/libopenlibm.a: $(OBJDIR)
+	(cd $(OPENLIBMDIR); CPPFLAGS='$(CPPFLAGS)' CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS)' ARCH=$(OPENLIBM_ARCH) TOOLPREFIX=$(TOOLPREFIX) make libopenlibm.a)
+	cp $(OPENLIBMDIR)/libopenlibm.a $(OBJDIR)
+	# Clean immediately to avoid installing the wrong architecture.
+	(cd $(OPENLIBMDIR); make clean)
+
+.PHONY: clean_libopenlibm
+clean_libopenlibm:
+	-(cd $(OPENLIBMDIR); make clean)
+	-rm $(OBJDIR)/libopenlibm.a
+

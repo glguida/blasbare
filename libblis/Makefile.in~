@@ -1,0 +1,29 @@
+ALL_TARGET+=$(OBJDIR)/liblis.a
+
+BLISDIR= $(SRCROOT)/contrib/blis
+BLISSRCROOT= ../../../
+EC_SRCDIR=$(BLISSRCROOT)/nux/libec
+CUSTOM_SRCROOT=$(BLISSRCROOT)
+
+ifeq (@MACHINE@,amd64)
+BLIS_ARCH=x86_64
+endif
+
+ifeq (@MACHINE@,i386)
+BLIS_ARCH=generic
+endif
+
+ifeq (@MACHINE@,riscv64)
+BLIS_ARCH=rv64iv
+endif
+
+CFLAGS+=-fwrapv -Wno-error
+CPPFLAGS+=-I$(BLISSRCROOT)/libblis/
+@COMPILE_LIBEC@
+@COMPILE_LIBM@
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/liblis.a: $(OBJDIR)
+	(cd $(OBJDIR); CFLAGS='$(CPPFLAGS) $(CFLAGS)' CC='$(CC)' LD='$(LD)' ../$(BLISDIR)/configure --disable-system --disable-shared --enable-static $(BLIS_ARCH))
