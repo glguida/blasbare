@@ -1,0 +1,12 @@
+[submodule "nux"]
+	path = nux
+	url = git@github.com:glguida/nux.git
+[submodule "contrib/blis"]
+	path = contrib/blis
+	url = https://github.com/flame/blis.git
+[submodule "contrib/openlibm"]
+	path = contrib/openlibm
+	url = https://github.com/JuliaMath/openlibm.git
+[submodule "contrib/ggmlux"]
+	path = contrib/ggmlux
+	url = git@github.com:glguida/ggmlux

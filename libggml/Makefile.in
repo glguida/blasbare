@@ -1,16 +1,34 @@
 ALL_TARGET+=$(OBJDIR)/libggml.a
 
-GGMLDIR= $(SRCROOT)/contrib/ggml
-GGMLSRCROOT= ../../../
+GGMLDIR= $(SRCROOT)/contrib/ggmlux
+GGMLSRCROOT= ../../
 EC_SRCDIR=$(GGMLSRCROOT)/nux/libec
 CUSTOM_SRCROOT=$(GGMLSRCROOT)
 
-CPPFLAGS+=-I$(BLISSRCROOT)/libggml
+# GGMLUX before LIBEC, so we can #include_next
+@COMPILE_LIBGGMLUX@
 @COMPILE_LIBEC@
 @COMPILE_LIBM@
+CFLAGS+=-fbuiltin -isystem $(shell $(CC) -print-file-name=include )
+CPPFLAGS+=-Wno-error=memset-elt-size -Wno-error=discarded-qualifiers -Wno-error=char-subscripts
+
+CFLAGS:=$(CFLAGS:-Werror=)
+CFLAGS+=-Wno-error -fpermissive -fno-exceptions
+
+ifeq (@MACHINE@,amd64)
+CFLAGS+=-msse -msse2 -msse3 -mavx
+endif
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
 $(OBJDIR)/libggml.a: $(OBJDIR)
-	(cd $(GGMLDIR); make CFLAGS='$(CPPFLAGS) $(CFLAGS)' CC='$(CC)' LD='$(LD)' UNAME_S=none  UNAME_P=riscv UNAME_M=riscv64 GGML_NO_LLAMAFILE=1  LLAMA_NO_OPENMP=1)
+	(cd $(GGMLDIR); make CXXFLAGS='$(CPPFLAGS) $(CFLAGS)' CXX='$(CXX)' CFLAGS='$(CPPFLAGS) $(CFLAGS)' CC='$(CC)' LD='$(LD)' UNAME_S=none  UNAME_P=riscv UNAME_M=@MACHINE@ GGML_NO_LLAMAFILE=1  LLAMA_NO_OPENMP=1 libggml.a)
+	cp $(GGMLDIR)/libggml.a $(OBJDIR)
+
+.PHONY: clean_ggml
+clean_ggml:
+	-rm $(OBJDIR)/libggml.a
+	(cd $(GGMLDIR); make clean)
+
+CLEAN_TARGET+= clean_ggml

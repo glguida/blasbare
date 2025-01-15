@@ -1,0 +1,3 @@
+LDADD+=-lopenlibm
+LDFLAGS+=-L@LIBM_BUILDDIR@/$(OBJDIR)
+LIBDEPS+=@LIBM_BUILDDIR@/$(OBJDIR)/libopenlibm.a

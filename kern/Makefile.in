@@ -2,15 +2,22 @@
 # NUX: A kernel Library.
 # Copyright (C) 2019 Gianluca Guida <glguida@tlbflush.org>
 #
-#  SPDX-License-Identifier:	GPL2.0+
+#  SPDX-License-Identifier:	BSD-2-Clause
 #
 
-@COMPILE_LIBEC@
+NOINST=y
+NUX_KERNEL=example
+
+SRCS+= main.c
+
+@COMPILE_LIBM@
+@COMPILE_LIBGGML@
+@COMPILE_LIBGGMLUX@
 @COMPILE_LIBNUX@
+@COMPILE_LIBEC@
+@LINK_LIBM@
+@LINK_LIBGGML@
+@LINK_LIBGGMLUX@
 @LINK_LIBEC@
 @LINK_LIBNUX@
 
-NOINST=y
-PROGRAM=example
-
-SRCS+= main.c

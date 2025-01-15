@@ -1,0 +1,2 @@
+#define __UCLIBCXX_STL_BUFFER_SIZE__ 32
+
