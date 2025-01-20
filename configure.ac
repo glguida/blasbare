@@ -21,6 +21,7 @@ AC_MK_DIR([${nux_dir}/mk])
 AC_NUXROOT_DIR([${nux_dir}])
 AC_LIBEC_DIR([${libec_dir}])
 AC_LIB_DIR([libggmlux], [libggmlux])
+AC_LIB_DIR([libnuxcompute], [libnuxcompute])
 AC_CONTRIBLIB_DIR([libm], [libm], [contrib/openlibm])
 AC_CONTRIBLIB_DIR([libggml], [libggml], [contrib/ggmlux/ggml])
 
@@ -87,6 +88,7 @@ AC_MK_CONFIG_FILES([
 	libm/Makefile
 	libggmlux/Makefile
 	libggml/Makefile
+	libnuxcompute/Makefile
 	libblis/Makefile
 	kern/Makefile
 	user/Makefile

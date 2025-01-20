@@ -1,4 +1,4 @@
-SUBDIRS= nux libm libggml libggmlux kern user
+SUBDIRS= nux libm libnuxcompute libggml libggmlux kern user
 
 NUX_DIR=@NUXBUILDROOT@
 APXH_DIR=$(NUX_DIR)/apxh
@@ -21,7 +21,7 @@ APXH=$(APXH_DIR)/multiboot/apxh
 QEMU_CMD=qemu-system-i386
 endif
 
-kern: libggml libggmlux libm
+kern: libnuxcompute libggml libggmlux libm
 
 example_qemu: subdirs
 	cp $(APXH) $@
@@ -29,10 +29,10 @@ example_qemu: subdirs
 	$(OBJAPPEND) -a $@ $@.ar50
 
 qemu: example_qemu
-	$(QEMU_CMD) -kernel example_qemu -serial mon:stdio -nographic
+	$(QEMU_CMD) -smp 4 -cpu max -kernel example_qemu -serial mon:stdio -nographic
 
 qemu_dbg: example_qemu
-	$(QEMU_CMD) -cpu max -kernel example_qemu -serial mon:stdio -nographic -S -s
+	$(QEMU_CMD) -smp 4 -cpu max -kernel example_qemu -serial mon:stdio -nographic -S -s
 
 
 ALL_TARGET += example_qemu

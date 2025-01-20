@@ -5,6 +5,12 @@
 #include <nux/nux.h>
 #include <nux/plt.h>
 
+#include <nuxcompute.h>
+
+#include <nux/locks.h>
+extern lock_t printlock;
+#define printf(...) ({ spinlock (&printlock); printf(__VA_ARGS__); spinunlock(&printlock); })
+
 uint64_t ggml_cycles (void)
 {
   printf ("GGML CYCLES!\n");
@@ -29,12 +35,23 @@ int pthread_create(pthread_t *restrict thread,
 		   void *restrict arg)
 {
   printf ("GGML PTHREAD CREATE!\n");
+  unsigned cpu = nuxcompute_allocate_cpu (start_routine, arg);
+
+  printf("CPU IS %d\n", cpu);
+
+  if (cpu == CPU_INVALID)
+    return -1;
+
+  *thread = cpu;
   return 0;
 }
 
-int pthread_join(pthread_t thread, void *retval)
+int pthread_join(pthread_t thread, void * unused)
 {
+  unsigned cpu = thread;
+
   printf ("GGML PTHREAD JOIN!\n");
+  nuxcompute_wait_cpu (cpu);
   return 0;
 }
 

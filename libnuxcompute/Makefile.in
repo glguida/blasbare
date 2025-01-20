@@ -1,0 +1,15 @@
+LIBRARY=nuxcompute
+
+@COMPILE_LIBM@
+@COMPILE_LIBGGML@
+@COMPILE_LIBGGMLUX@
+@LINK_LIBM@
+@LINK_LIBGGML@
+@LINK_LIBGGMLUX@
+
+ifeq (@MACHINE@,amd64)
+CFLAGS+=-msse -msse2 -msse3 -mavx
+SRCS+= amd64.c
+endif
+
+SRCS+= nuxcompute.c

@@ -6,3 +6,4 @@ SRCS+= qsort.c strdup.c strcmp.c stdlib.c cxxcompile.cc stdio.c ggml-dep.c
 
 @COMPILE_LIBEC@
 @COMPILE_LIBNUX@
+@COMPILE_LIBNUXCOMPUTE@
