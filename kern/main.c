@@ -17,6 +17,7 @@
 #include <nux/nux.h>
 #include <nux/hal.h>
 #include <nuxcompute.h>
+#include <nux/nuxperf.h>
 
 lock_t printlock;
 #define printf(...) ({ spinlock (&printlock); printf(__VA_ARGS__); spinunlock(&printlock); })
@@ -26,12 +27,26 @@ struct hal_umap umap;
 
 int nuxcompute_initialized;
 
+extern void _gpt2_init (void *arg);
+extern void simple_init (void *arg);
+extern void test0_main (int argc, char *argv[]);
+extern void test1_main (int argc, char *argv[]);
+extern void test2_main (int argc, char *argv[]);
+extern void start_simple(void);
 
-extern void _simple_init (void *arg);
+void _tests_init(void *u)
+{
+  (void)u;
+  test0_main(0, NULL);
+  test1_main(0, NULL);
+  test2_main(0, NULL);
+  start_simple();
+}
 
 int
 main (int argc, char *argv[])
 {
+  //timer_alarm (1 * 1000 * 1000 * 1000);
   nuxcompute_init ();
   cpu_ipi (cpu_id ());
 
@@ -41,7 +56,8 @@ main (int argc, char *argv[])
 
   __atomic_store_n (&nuxcompute_initialized, 1, __ATOMIC_SEQ_CST);
 
-  nuxcompute_allocate_cpu (_simple_init, NULL);
+  //nuxcompute_allocate_cpu (_tests_init, NULL);
+  nuxcompute_allocate_cpu (_gpt2_init, NULL);
   
   printf("DONE");
   return EXIT_IDLE;
@@ -71,19 +87,24 @@ entry_ipi (uctxt_t * uctxt)
 {
   if (nuxcompute_cpu_owned (cpu_id()))
     {
-      printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
       nuxcompute_cpu_run ();
     }
 
   return uctxt;
 }
 
+uint64_t ggml_time_us(void);
+
 uctxt_t *
 entry_alarm (uctxt_t * uctxt)
 {
   timer_alarm (1 * 1000 * 1000 * 1000);
   info ("TMR: %" PRIu64 " us", timer_gettime ());
-  uctxt_print (uctxt);
+  info ("GGML: %" PRIu64 " us", ggml_time_us ());
+
+  nuxperf_print ();
+  nuxmeasure_print ();
+
   return uctxt;
 }
 

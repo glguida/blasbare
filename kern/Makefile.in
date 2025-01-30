@@ -8,7 +8,7 @@
 NOINST=y
 NUX_KERNEL=example
 
-SRCS+= main.c simple.c
+SRCS+= main.c util.c simple.c cgpt-2.c cgpt-common.c test0.c test1.c test2.c
 
 @COMPILE_LIBM@
 @COMPILE_LIBGGML@
