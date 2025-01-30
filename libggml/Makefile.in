@@ -23,7 +23,7 @@ $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
 $(OBJDIR)/libggml.a: $(OBJDIR)
-	(cd $(GGMLDIR); make CXXFLAGS='$(CPPFLAGS) $(CFLAGS)' CXX='$(CXX)' CFLAGS='$(CPPFLAGS) $(CFLAGS)' CC='$(CC)' LD='$(LD)' UNAME_S=none  UNAME_P=riscv UNAME_M=@MACHINE@ GGML_NO_LLAMAFILE=1  LLAMA_NO_OPENMP=1 libggml.a)
+	(cd $(GGMLDIR); make CXXFLAGS='$(CPPFLAGS) $(CFLAGS)' CXX='$(CXX)' CFLAGS='$(CPPFLAGS) $(CFLAGS)' AR='$(AR)' CC='$(CC)' LD='$(LD)' UNAME_S=none  UNAME_P=riscv UNAME_M=@MACHINE@ GGML_NO_LLAMAFILE=1  LLAMA_NO_OPENMP=1 libggml.a)
 	cp $(GGMLDIR)/libggml.a $(OBJDIR)
 
 .PHONY: clean_ggml

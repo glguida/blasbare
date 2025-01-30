@@ -13,7 +13,7 @@ $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
 $(OBJDIR)/libopenlibm.a: $(OBJDIR)
-	(cd $(OPENLIBMDIR); CPPFLAGS='$(CPPFLAGS)' CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS)' ARCH=$(OPENLIBM_ARCH) TOOLPREFIX=$(TOOLPREFIX) make libopenlibm.a)
+	(cd $(OPENLIBMDIR); CPPFLAGS='$(CPPFLAGS)' CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS)' ARCH=$(OPENLIBM_ARCH) USEGCC=1 USECLANG=0 TOOLPREFIX=@TOOLPREFIX@ make libopenlibm.a)
 	cp $(OPENLIBMDIR)/libopenlibm.a $(OBJDIR)
 	# Clean immediately to avoid installing the wrong architecture.
 	(cd $(OPENLIBMDIR); make clean)
