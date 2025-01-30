@@ -5,7 +5,6 @@
 #include <stree.h>
 #include "nuxcompute.h"
 
-#define NUXCOMPUTE_DEBUG
 #ifndef NUXCOMPUTE_DEBUG
 #define NCPRINT(...)
 #else
@@ -99,7 +98,7 @@ nuxcompute_wait_cpu (unsigned cpu)
 
   NCPRINT ("waiting cpu %d...\n", cpu);
 
-  while (!atomic_cpumask_get (&nc_running_cpumask, cpu))
+  while (atomic_cpumask_get (&nc_running_cpumask, cpu))
     hal_cpu_relax();
 
   NCPRINT ("done\n");
@@ -117,12 +116,11 @@ nuxcompute_cpu_run (void)
   spinunlock (&nc_lock);
 
   atomic_cpumask_set (&nc_running_cpumask, cpu);
-
-  printf ("CPU RUN %d [%p(%p)]\n", cpu, fnarg.func, fnarg.arg);
   if (fnarg.func != NULL)
     fnarg.func (fnarg.arg);
-
   atomic_cpumask_clear (&nc_running_cpumask, cpu);
+
+  nuxcompute_free_cpu (cpu);
 }
 
 bool
