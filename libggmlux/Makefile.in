@@ -2,7 +2,7 @@ CFLAGS:=$(CFLAGS:-Werror=)
 CFLAGS+=-Wno-error -fpermissive -fno-exceptions
 
 LIBRARY=ggmlux
-SRCS+= qsort.c strdup.c strcmp.c stdlib.c cxxcompile.cc stdio.c ggml-dep.c
+SRCS+= qsort.c strdup.c strcmp.c stdlib.c cxxcompile.cc stdio.c ggml-dep.c perf.c
 
 @COMPILE_LIBEC@
 @COMPILE_LIBNUX@
