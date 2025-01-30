@@ -21,18 +21,20 @@ APXH=$(APXH_DIR)/multiboot/apxh
 QEMU_CMD=qemu-system-i386
 endif
 
-kern: libnuxcompute libggml libggmlux libm
+kern: nux libnuxcompute libggml libggmlux libm
 
 example_qemu: subdirs
 	cp $(APXH) $@
-	$(AR50) -m nux-payload -c $@.ar50 kern/example user/exuser
+	cp kern/example kern.model
+	$(OBJAPPEND) -a kern.model ../contrib/ggmlux/ggml/examples/gpt-2/models/gpt-2-117M/ggml-model.bin
+	$(AR50) -m nux-payload -c $@.ar50 kern.model user/exuser
 	$(OBJAPPEND) -a $@ $@.ar50
 
 qemu: example_qemu
-	$(QEMU_CMD) -smp 4 -cpu max -kernel example_qemu -serial mon:stdio -nographic
+	$(QEMU_CMD) -m 2G -smp 4 -cpu max -kernel example_qemu -serial mon:stdio -nographic
 
 qemu_dbg: example_qemu
-	$(QEMU_CMD) -smp 4 -cpu max -kernel example_qemu -serial mon:stdio -nographic -S -s
+	$(QEMU_CMD) -m 2G -smp 4 -cpu max -kernel example_qemu -serial mon:stdio -nographic -S -s
 
 
 ALL_TARGET += example_qemu
