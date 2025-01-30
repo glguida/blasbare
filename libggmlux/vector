@@ -143,6 +143,14 @@ namespace std{
 			return a;
 		}
 
+		inline T * _data(){
+		       return data;
+		}
+
+		inline const T * _data() const {
+		       return data;
+		}
+
 		inline iterator begin(){
 			return data;
 		}

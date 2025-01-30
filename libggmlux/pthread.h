@@ -30,7 +30,7 @@ extern "C" {
 
 static inline int pthread_mutex_init (pthread_mutex_t *mutex, void *attr)
 {
-  printf("mutex init");
+  //  printf("mutex init");
   (void)attr;
   spinlock_init (mutex);
   return 0;
@@ -38,28 +38,28 @@ static inline int pthread_mutex_init (pthread_mutex_t *mutex, void *attr)
 
 static inline int pthread_mutex_lock (pthread_mutex_t *mutex)
 {
-  printf("mutex lock");
+  //  printf("mutex lock");
   spinlock (mutex);
   return 0;
 }
 
 static inline int pthread_mutex_unlock (pthread_mutex_t *mutex)
 {
-  printf(__FUNCTION__);
+  //  printf(__FUNCTION__);
   spinunlock (mutex);
   return 0;
 }
 
 static inline int pthread_mutex_destroy (pthread_mutex_t *mutex)
 {
-  printf(__FUNCTION__);
+  //  printf(__FUNCTION__);
   (void)mutex;
   return 0;
 }
 
 static inline void pthread_cond_init(pthread_cond_t* cond, void *attr)
 {
-  printf(__FUNCTION__);
+  //  printf(__FUNCTION__);
   (void)attr;
   __atomic_store_n(&cond->waiters, 0, __ATOMIC_RELAXED);
   __atomic_store_n(&cond->generation, 0, __ATOMIC_RELAXED);
@@ -67,7 +67,7 @@ static inline void pthread_cond_init(pthread_cond_t* cond, void *attr)
 
 static inline void pthread_cond_wait(pthread_cond_t* cond, lock_t* mutex)
 {
-  printf(__FUNCTION__);
+  //  printf(__FUNCTION__);
   __atomic_add_fetch(&cond->waiters, 1, __ATOMIC_RELAXED);
   int gen = __atomic_load_n(&cond->generation, __ATOMIC_ACQUIRE);
 
@@ -87,7 +87,7 @@ static inline void pthread_cond_wait(pthread_cond_t* cond, lock_t* mutex)
 
 static inline void pthread_cond_signal(pthread_cond_t* cond)
 {
-  printf(__FUNCTION__);
+  //  printf(__FUNCTION__);
   if (__atomic_load_n(&cond->waiters, __ATOMIC_RELAXED) == 0) {
     return;
   }
@@ -96,7 +96,7 @@ static inline void pthread_cond_signal(pthread_cond_t* cond)
 
 static inline void pthread_cond_broadcast(pthread_cond_t* cond)
 {
-  printf(__FUNCTION__);
+  //  printf(__FUNCTION__);
   if (__atomic_load_n(&cond->waiters, __ATOMIC_RELAXED) == 0) {
     return;
   }
@@ -105,6 +105,6 @@ static inline void pthread_cond_broadcast(pthread_cond_t* cond)
 
 static inline void pthread_cond_destroy(pthread_cond_t *cond)
 {
-  printf(__FUNCTION__);
+  //  printf(__FUNCTION__);
   (void)cond;
 }

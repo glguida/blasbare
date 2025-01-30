@@ -7,9 +7,7 @@
 
 #include <nuxcompute.h>
 
-#include <nux/locks.h>
-extern lock_t printlock;
-#define printf(...) ({ spinlock (&printlock); printf(__VA_ARGS__); spinunlock(&printlock); })
+#define printf(...)
 
 uint64_t ggml_cycles (void)
 {
@@ -20,8 +18,7 @@ uint64_t ggml_cycles (void)
 uint64_t ggml_time_us (void)
 {
   printf ("GGML TIMER US!\n");
-  /* XXX: MICROSECONDS! */
-  return plt_tmr_ctr ();
+  return timer_gettime () / 1000;
 }
 
 void ggml_time_init (void)

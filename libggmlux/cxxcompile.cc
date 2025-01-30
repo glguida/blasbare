@@ -1,4 +1,6 @@
+#include "assert.h"
 #include "stdlib.h"
+#include "string.h"
 
 namespace __cxxabiv1 
 {
@@ -27,24 +29,39 @@ namespace __cxxabiv1
 	}
 }
 
+namespace std {
+  void __throw_out_of_range(char const *str) {
+    assert(!"out of range");
+  }
+};
+
+
+
 void *operator new(size_t size)
 {
-    return malloc(size);
+  void *ptr = malloc(size);
+  return ptr;
 }
 
 void *operator new[](size_t size)
 {
-    return malloc(size);
+  void *ptr = malloc(size);
+  return ptr;
 }
 
 void operator delete(void *p)
 {
-    free(p);
+  free(p);
+}
+
+void operator delete(void *p, size_t size)
+{
+  free(p);
 }
 
 void operator delete[](void *p)
 {
-    free(p);
+  free(p);
 }
 
 extern "C" {
